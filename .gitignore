@@ -1,0 +1,4 @@
+nbproject/
+vendor/
+demo/db.sqlite
+composer.lock
