@@ -27,13 +27,15 @@
 namespace Wireframe\Test\Users;
 
 use Doctrine\ORM\Mapping\Table;
+use RuntimeException;
 use Wireframe\Entity;
+use Wireframe\EntityRepository;
 
 /**
  * Description of User
  *
  * @author Alberto Avon <alberto.avon@gmail.com>
- * @Entity(repositoryClass="\Wireframe\EntityRepository")
+ * @Entity(repositoryClass="EntityRepository")
  * @Table(name="users")
  */
 class User extends Entity
@@ -56,6 +58,12 @@ class User extends Entity
      * @Column(type="string", length=150, unique=true, nullable=false)
      */
     protected $email;
+
+    /**
+     * @var string
+     * @Column(type="text", nullable=true)
+     */
+    protected $notes;
 
     /**
      * Get name
@@ -87,35 +95,59 @@ class User extends Entity
     /**
      * Set name
      * @param $name
+     * @return User
      */
     public function setName($name)
     {
         $this->name = $name;
+        return $this;
     }
 
     /**
      * Set surname
      * @param $surname
+     * @return User
      */
     public function setSurname($surname)
     {
         $this->surname = $surname;
+        return $this;
     }
 
     /**
      * Set email
      * @param $email
+     * @return User
      */
     public function setEmail($email)
     {
         // Validated e-mail address
         $_email = filter_var($email, FILTER_VALIDATE_EMAIL);
-        
+
         if (!$_email) {
-            throw new \RuntimeException('Invalid or empty e-mail address provided');
+            throw new RuntimeException('Invalid or empty e-mail address provided');
         }
-        
+
         $this->email = trim(strtolower($_email));
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    /**
+     * @param string $notes
+     * @return User
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+        return $this;
     }
 
 }

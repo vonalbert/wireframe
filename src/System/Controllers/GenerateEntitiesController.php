@@ -25,8 +25,8 @@ class GenerateEntitiesController
             $entityGenerator = new EntityGenerator();
             $entityGenerator->setGenerateAnnotations(true);
             $entityGenerator->setGenerateStubMethods(true);
-            //$entityGenerator->setUpdateEntityIfExists(true);
-            $entityGenerator->setRegenerateEntityIfExists(true);
+            $entityGenerator->setUpdateEntityIfExists(true);
+            $entityGenerator->setRegenerateEntityIfExists(false);
             $entityGenerator->setClassToExtend(Entity::class);
 
             // Generating Entities, insert it into the current working directory

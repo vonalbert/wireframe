@@ -24,43 +24,29 @@
  * THE SOFTWARE.
  */
 
-namespace Wireframe\System;
+namespace Wireframe\System\Controllers;
 
-use DI\ContainerBuilder;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
-use Wireframe\Application\Application;
-use Wireframe\Application\ModuleInterface;
-use Wireframe\System\Controllers\GenerateEntitiesController;
-use Wireframe\System\Controllers\InstallController;
-use Wireframe\System\Controllers\UpdateController;
-use function DI\get;
-use function DI\object;
+use Slim\Http\Response;
 
 /**
  * @author Alberto Avon <alberto.avon@gmail.com>
  */
-class SystemModule implements ModuleInterface
+class UpdateController
 {
-
-    /**
-     * @inheritdoc
-     */
-    public function registerRouting(Application $app)
+    
+    public function __invoke(EntityManager $em, SchemaTool $tool, Response $response)
     {
-        $app->get('/install', InstallController::class);
-        $app->get('/update', UpdateController::class);
-        $app->get('/entities', GenerateEntitiesController::class);
+        $metadatas = $em->getMetadataFactory()->getAllMetadata();
+        
+        if ($metadatas) {
+            $tool->updateSchema($metadatas);
+            return $response->write('System updated complete');
+        } else {
+            return $response->write('Nothing to install');
+        }
+        
     }
-
-    /**
-     * @inheritdoc
-     */
-    public function registerServices(ContainerBuilder $builder)
-    {
-        $builder->addDefinitions([
-            SchemaTool::class => object(SchemaTool::class)->constructor(get(EntityManager::class))
-        ]);
-    }
-
+    
 }
