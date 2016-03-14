@@ -29,13 +29,12 @@ namespace Wireframe\Test\Users;
 use Doctrine\ORM\Mapping\Table;
 use RuntimeException;
 use Wireframe\Entity;
-use Wireframe\EntityRepository;
 
 /**
  * Description of User
  *
  * @author Alberto Avon <alberto.avon@gmail.com>
- * @Entity(repositoryClass="EntityRepository")
+ * @Entity(repositoryClass="Wireframe\EntityRepository")
  * @Table(name="users")
  */
 class User extends Entity
@@ -149,5 +148,5 @@ class User extends Entity
         $this->notes = $notes;
         return $this;
     }
-
+    
 }

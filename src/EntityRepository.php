@@ -38,11 +38,11 @@ use Zend\Hydrator\HydratorInterface;
  */
 class EntityRepository extends DoctrineEntityRepository implements ContextualRepositoryInterface
 {
+
     /**
      * @var HydratorInterface
      */
     private $hydrator;
-
 
     /**
      * @inheritdoc
@@ -92,7 +92,7 @@ class EntityRepository extends DoctrineEntityRepository implements ContextualRep
         $this->_em->remove($this->contextualFind($id));
         $this->_em->flush();
     }
-    
+
     /**
      * Fill the entity
      * @param Entity $entity
@@ -102,7 +102,7 @@ class EntityRepository extends DoctrineEntityRepository implements ContextualRep
     {
         $this->getHydrator()->hydrate($data->toArray(), $entity);
     }
-    
+
     /**
      * Get the entity hydrator
      * @return HydratorInterface
@@ -112,7 +112,7 @@ class EntityRepository extends DoctrineEntityRepository implements ContextualRep
         if (!$this->hydrator) {
             $this->hydrator = new ClassMethods(false);
         }
-        
+
         return $this->hydrator;
     }
 

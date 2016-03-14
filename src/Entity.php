@@ -26,16 +26,17 @@
 
 namespace Wireframe;
 
+use Doctrine\Common\Inflector\Inflector;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\MappedSuperclass;
-use Wireframe\Data\Store;
+use JsonSerializable;
 
 /**
  * @author Alberto Avon<alberto.avon@gmail.com>
  * @MappedSuperclass
  */
-abstract class Entity
+abstract class Entity implements JsonSerializable
 {
 
     /**
@@ -53,6 +54,20 @@ abstract class Entity
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Serialize the entity to json
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        $out = [];
+        foreach ($this as $prop => $val) {
+            $out[Inflector::tableize($prop)] = $val;
+        }
+        
+        return $out;
     }
 
 }
