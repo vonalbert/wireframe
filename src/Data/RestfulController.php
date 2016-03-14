@@ -71,6 +71,7 @@ class RestfulController
         $ctx = $this->resource->createContext()->setRequestData($request);
         
         $entities = $repository->contextualSearch($ctx);
+        return $response->withJson(['data' => $entities]);
     }
 
     /**
@@ -86,6 +87,7 @@ class RestfulController
         $ctx = $this->resource->createContext()->setRequestData($request);
         
         $entity = $repository->contextualFind($ctx, $id);
+        return $response->withJson(['data' => $entity]);
     }
 
     /**
@@ -101,6 +103,7 @@ class RestfulController
         $input = $request->getParsedBody();
         
         $entity = $repository->contextualCreate($ctx, $input);
+        return $response->withJson(['data' => $entity]);
     }
 
     /**
@@ -117,6 +120,7 @@ class RestfulController
         $input = $request->getParsedBody();
         
         $entity = $repository->contextualUpdate($ctx, $id, $input);
+        return $response->withJson(['data' => $entity]);
     }
 
     /**
@@ -131,7 +135,8 @@ class RestfulController
         $repository = $this->getEntityRepository();
         $ctx = $this->resource->createContext()->setRequestData($request);
         
-        $entity = $repository->contextualDelete($ctx, $id);
+        $repository->contextualDelete($ctx, $id);
+        return $response->withJson(['data' => true]);
     }
     
     /**

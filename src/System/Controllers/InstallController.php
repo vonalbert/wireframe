@@ -31,8 +31,6 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Slim\Http\Response;
 
 /**
- * Description of InstallController
- *
  * @author Alberto Avon <alberto.avon@gmail.com>
  */
 class InstallController

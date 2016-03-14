@@ -27,14 +27,13 @@
 namespace Wireframe\Test\Users;
 
 use Doctrine\ORM\Mapping\Table;
-use Wireframe\Data\Store;
 use Wireframe\Entity;
 
 /**
  * Description of User
  *
  * @author Alberto Avon <alberto.avon@gmail.com>
- * @Entity
+ * @Entity(repositoryClass="\Wireframe\EntityRepository")
  * @Table(name="users")
  */
 class User extends Entity
@@ -57,5 +56,66 @@ class User extends Entity
      * @Column(type="string", length=150, unique=true, nullable=false)
      */
     protected $email;
+
+    /**
+     * Get name
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get surname
+     * @return string
+     */
+    public function getSurname()
+    {
+        return $this->surname;
+    }
+
+    /**
+     * Get email
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set name
+     * @param $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Set surname
+     * @param $surname
+     */
+    public function setSurname($surname)
+    {
+        $this->surname = $surname;
+    }
+
+    /**
+     * Set email
+     * @param $email
+     */
+    public function setEmail($email)
+    {
+        // Validated e-mail address
+        $_email = filter_var($email, FILTER_VALIDATE_EMAIL);
+        
+        if (!$_email) {
+            throw new \RuntimeException('Invalid or empty e-mail address provided');
+        }
+        
+        $this->email = trim(strtolower($_email));
+    }
 
 }

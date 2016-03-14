@@ -26,12 +26,10 @@
 
 namespace Wireframe\Application;
 
-use DI\ContainerBuilder;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
-use RuntimeException;
-use Wireframe\System\Http\Middleware\RemoveTrailingSlashMiddleware;
+use OutOfBoundsException;
 use Wireframe\System\SystemModule;
 
 /**
@@ -80,12 +78,12 @@ class Config
      * Access magically to the configuration properties
      * @param string $name
      * @return mixed
-     * @throws \OutOfBoundsException
+     * @throws OutOfBoundsException
      */
     public function __get($name)
     {
         if (!isset($this->{$name})) {
-            throw new \OutOfBoundsException(sprintf('Invalid property %s for %s', $name, get_class()));
+            throw new OutOfBoundsException(sprintf('Invalid property %s for %s', $name, get_class()));
         }
 
         return $this->{$name};

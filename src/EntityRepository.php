@@ -30,13 +30,19 @@ use Doctrine\ORM\EntityRepository as DoctrineEntityRepository;
 use Wireframe\Data\Context;
 use Wireframe\Data\ContextualRepositoryInterface;
 use Wireframe\Data\Store;
-use Wireframe\Utils\ClassHydrator;
+use Zend\Hydrator\ClassMethods;
+use Zend\Hydrator\HydratorInterface;
 
 /**
  * @author Alberto Avon<alberto.avon@gmail.com>
  */
 class EntityRepository extends DoctrineEntityRepository implements ContextualRepositoryInterface
 {
+    /**
+     * @var HydratorInterface
+     */
+    private $hydrator;
+
 
     /**
      * @inheritdoc
@@ -54,6 +60,7 @@ class EntityRepository extends DoctrineEntityRepository implements ContextualRep
         $entity = new $this->_entityName;
         $this->fillEntity($entity, new Store($input));
         $this->_em->persist($entity);
+        $this->_em->flush();
         return $entity;
     }
 
@@ -73,6 +80,7 @@ class EntityRepository extends DoctrineEntityRepository implements ContextualRep
         $entity = $this->contextualFind($ctx, $id);
         $this->fillEntity($entity, new Store($input));
         $this->_em->persist($entity);
+        $this->_em->flush();
         return $entity;
     }
 
@@ -82,6 +90,7 @@ class EntityRepository extends DoctrineEntityRepository implements ContextualRep
     public function contextualDelete(Context $ctx, $id)
     {
         $this->_em->remove($this->contextualFind($id));
+        $this->_em->flush();
     }
     
     /**
@@ -91,7 +100,20 @@ class EntityRepository extends DoctrineEntityRepository implements ContextualRep
      */
     protected function fillEntity(Entity $entity, Store $data)
     {
-        ClassHydrator::hydrate($entity, $data->toArray());
+        $this->getHydrator()->hydrate($data->toArray(), $entity);
+    }
+    
+    /**
+     * Get the entity hydrator
+     * @return HydratorInterface
+     */
+    protected function getHydrator()
+    {
+        if (!$this->hydrator) {
+            $this->hydrator = new ClassMethods(false);
+        }
+        
+        return $this->hydrator;
     }
 
 }

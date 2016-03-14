@@ -34,5 +34,4 @@ $config->entityManager(__DIR__ . '/src', [
 $config->withSystemRoutes();
 $config->module(new Wireframe\Test\AppModule);
 
-//$config->resource('users', \Wireframe\Test\Users\User::class);
 $config->createApplication()->run();

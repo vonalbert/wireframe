@@ -31,6 +31,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Wireframe\Application\Application;
 use Wireframe\Application\ModuleInterface;
+use Wireframe\System\Controllers\GenerateEntitiesController;
 use Wireframe\System\Controllers\InstallController;
 use function DI\get;
 use function DI\object;
@@ -47,6 +48,7 @@ class SystemModule implements ModuleInterface
     public function registerRouting(Application $app)
     {
         $app->get('/install', InstallController::class);
+        $app->get('/entities', GenerateEntitiesController::class);
     }
 
     /**

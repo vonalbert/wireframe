@@ -11,11 +11,12 @@
     "require": {
         "doctrine/orm": "^2.5",
         "slim/slim": "^3.2",
-        "php-di/slim-bridge": "^1.0"
+        "php-di/slim-bridge": "^1.0",
+        "zendframework/zend-hydrator": "^2.1"
     },
     "autoload": {
         "psr-4": { "Wireframe\\": "src/" },
-        "files": [ "src/Utils/functions.php" ]
+        "files": [ "src/functions.php" ]
     },
     "autoload-dev": {
         "psr-4": { "Wireframe\\Test\\": "demo/src/" }
