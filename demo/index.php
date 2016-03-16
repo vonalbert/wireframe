@@ -41,7 +41,5 @@ $app = new \Wireframe\Application($em, [
     'users' => new Wireframe\Resource\EntityResource($em, \Wireframe\Test\Users\User::class),
 ]);
 
-var_dump($app);
-
 // Run the application
 $app->run();
