@@ -2,11 +2,13 @@
 
 namespace Wireframe;
 
-use DI\ContainerBuilder;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Interop\Container\ContainerInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Wireframe\Core\ContainerBuilder;
+use Wireframe\Core\ExceptionHandler;
 use Wireframe\Resource\EntityResource;
+use Zend\Diactoros\Response\JsonResponse;
 use Zend\Expressive\Application as Expressive;
 use Zend\Expressive\Router\FastRouteRouter;
 
@@ -42,28 +44,16 @@ class Application extends Expressive
             }
         }
         
-        parent::__construct(new FastRouteRouter, $this->createContainerInstance($em, $resources));
+        $router = new FastRouteRouter;
+        $container = ContainerBuilder::createContainer($em, $resources);
+        $exception = new ExceptionHandler;
+        
+        parent::__construct($router, $container, $exception);
         
         // Add resources
         foreach ($resources as $name => $resource) {
             $this->addResource($name, $resource);
         }
-    }
-    
-    /**
-     * Create a new container instance
-     * @param EntityManager $em
-     * @param array $resources
-     * @return ContainerInterface
-     */
-    protected function createContainerInstance(EntityManager $em, array $resources = [])
-    {
-        $cb = new ContainerBuilder;
-        $cb->useAnnotations(true)->useAutowiring(true)
-                ->addDefinitions([EntityManager::class => $em])
-                ->addDefinitions(compact('em', 'resources'));
-        
-        return $cb->build();
     }
     
     /**
@@ -77,23 +67,23 @@ class Application extends Expressive
         $this->_res[$name] = $resource;
         
         $this->get("/{$name}", function() use($resource) {
-            return new \Zend\Diactoros\Response\JsonResponse($resource->findList());
+            return new JsonResponse($resource->findList());
         }, "{$name}.list");
         
-        $this->get("/{$name}/:id", function(\Psr\Http\Message\ServerRequestInterface $req) use($resource) {
-            return new \Zend\Diactoros\Response\JsonResponse($resource->find($req->getAttribute('id')));
+        $this->get("/{$name}/:id", function(ServerRequestInterface $req) use($resource) {
+            return new JsonResponse($resource->find($req->getAttribute('id')));
         }, "{$name}.show");
         
-        $this->post("/{$name}", function(\Psr\Http\Message\ServerRequestInterface $req) use($resource) {
-            return new \Zend\Diactoros\Response\JsonResponse($resource->create($req->getParsedBody()));
+        $this->post("/{$name}", function(ServerRequestInterface $req) use($resource) {
+            return new JsonResponse($resource->create($req->getParsedBody()));
         }, "{$name}.create");
         
-        $this->put("/{$name}/:id", function(\Psr\Http\Message\ServerRequestInterface $req) use($resource) {
-            return new \Zend\Diactoros\Response\JsonResponse($resource->update($req->getAttribute('id'), $req->getParsedBody()));
+        $this->put("/{$name}/:id", function(ServerRequestInterface $req) use($resource) {
+            return new JsonResponse($resource->update($req->getAttribute('id'), $req->getParsedBody()));
         }, "{$name}.update");
         
-        $this->delete("/{$name}/:id", function(\Psr\Http\Message\ServerRequestInterface $req) use($resource) {
-            return new \Zend\Diactoros\Response\JsonResponse($resource->delete($req->getAttribute('id')));
+        $this->delete("/{$name}/:id", function(ServerRequestInterface $req) use($resource) {
+            return new JsonResponse($resource->delete($req->getAttribute('id')));
         }, "{$name}.delete");
         
         return $this;

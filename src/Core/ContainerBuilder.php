@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2016 Alberto.
@@ -24,40 +24,36 @@
  * THE SOFTWARE.
  */
 
-// Delegate static file requests back to the PHP built-in webserver
-if (php_sapi_name() === 'cli-server'
-    && is_file(__DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))
-) {
-    return false;
+namespace Wireframe\Core;
+
+use DI\ContainerBuilder as DiContainerBuilder;
+use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
+
+/**
+ * Description of ContainerBuilder
+ *
+ * @author Alberto Avon<alberto.avon@gmail.com>
+ */
+abstract class ContainerBuilder
+{
+    
+    
+    /**
+     * Create a new container instance
+     * @param EntityManager $em
+     * @param array $resources
+     * @return ContainerInterface
+     */
+    public static function createContainer(EntityManager $em, array $resources = [])
+    {
+        $cb = new DiContainerBuilder;
+        $cb->useAnnotations(true)->useAutowiring(true)
+                ->addDefinitions([EntityManager::class => $em])
+                ->addDefinitions(compact('em', 'resources'));
+        
+        return $cb->build();
+    }
+        
+    
 }
-
-// Set the root directory as current dir
-chdir(dirname(__DIR__));
-
-// Enable php errors
-error_reporting(E_ALL);
-ini_set('display_errors', 'On');
-
-// Require composer
-require './vendor/autoload.php';
-
-// Database Connection
-$conn = [
-    'driver' => 'pdo_sqlite',
-    'path' => __DIR__ . '/db.sqlite'
-];
-
-// Doctrine's EntityManager Configuration
-$config = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration([__DIR__], true);
-$em = Doctrine\ORM\EntityManager::create($conn, $config);
-
-// Start wireframe
-$app = new \Wireframe\Application($em, [
-    // A resource list
-    'users' => new Wireframe\Resource\EntityResource($em, \Wireframe\Test\Users\User::class),
-]);
-
-// Run the application$app->get('/', function ($request, $response, $next) {
-$app->pipeRoutingMiddleware();
-$app->pipeDispatchMiddleware();
-$app->run();

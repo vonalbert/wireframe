@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2016 Alberto.
@@ -24,40 +24,50 @@
  * THE SOFTWARE.
  */
 
-// Delegate static file requests back to the PHP built-in webserver
-if (php_sapi_name() === 'cli-server'
-    && is_file(__DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))
-) {
-    return false;
+namespace Wireframe;
+
+use Doctrine\Common\Inflector\Inflector;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\MappedSuperclass;
+use JsonSerializable;
+
+/**
+ * @author Alberto Avon<alberto.avon@gmail.com>
+ * @MappedSuperclass
+ */
+abstract class Entity implements JsonSerializable
+{
+
+    /**
+     * @var int
+     * @Column(type="integer")
+     * @Id
+     * @GeneratedValue
+     */
+    protected $id;
+
+    /**
+     * Get the entity id
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Serialize the entity to json
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        $out = [];
+        foreach ($this as $prop => $val) {
+            $out[Inflector::tableize($prop)] = $val;
+        }
+        
+        return $out;
+    }
+
 }
-
-// Set the root directory as current dir
-chdir(dirname(__DIR__));
-
-// Enable php errors
-error_reporting(E_ALL);
-ini_set('display_errors', 'On');
-
-// Require composer
-require './vendor/autoload.php';
-
-// Database Connection
-$conn = [
-    'driver' => 'pdo_sqlite',
-    'path' => __DIR__ . '/db.sqlite'
-];
-
-// Doctrine's EntityManager Configuration
-$config = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration([__DIR__], true);
-$em = Doctrine\ORM\EntityManager::create($conn, $config);
-
-// Start wireframe
-$app = new \Wireframe\Application($em, [
-    // A resource list
-    'users' => new Wireframe\Resource\EntityResource($em, \Wireframe\Test\Users\User::class),
-]);
-
-// Run the application$app->get('/', function ($request, $response, $next) {
-$app->pipeRoutingMiddleware();
-$app->pipeDispatchMiddleware();
-$app->run();

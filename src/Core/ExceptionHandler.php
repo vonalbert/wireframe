@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2016 Alberto.
@@ -24,40 +24,28 @@
  * THE SOFTWARE.
  */
 
-// Delegate static file requests back to the PHP built-in webserver
-if (php_sapi_name() === 'cli-server'
-    && is_file(__DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))
-) {
-    return false;
+namespace Wireframe\Core;
+
+use Whoops\Handler\PrettyPageHandler;
+use Whoops\Run;
+use Zend\Expressive\WhoopsErrorHandler;
+
+/**
+ * Description of ExceptionHandler
+ *
+ * @author Alberto Avon<alberto.avon@gmail.com>
+ */
+class ExceptionHandler extends WhoopsErrorHandler
+{
+    public function __construct()
+    {
+        $handler = new PrettyPageHandler;
+        $whoops = new Run;
+        $whoops->writeToOutput(false);
+        $whoops->allowQuit(false);
+        $whoops->pushHandler($handler);
+        parent::__construct($whoops, $handler);
+    }
+    
+    
 }
-
-// Set the root directory as current dir
-chdir(dirname(__DIR__));
-
-// Enable php errors
-error_reporting(E_ALL);
-ini_set('display_errors', 'On');
-
-// Require composer
-require './vendor/autoload.php';
-
-// Database Connection
-$conn = [
-    'driver' => 'pdo_sqlite',
-    'path' => __DIR__ . '/db.sqlite'
-];
-
-// Doctrine's EntityManager Configuration
-$config = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration([__DIR__], true);
-$em = Doctrine\ORM\EntityManager::create($conn, $config);
-
-// Start wireframe
-$app = new \Wireframe\Application($em, [
-    // A resource list
-    'users' => new Wireframe\Resource\EntityResource($em, \Wireframe\Test\Users\User::class),
-]);
-
-// Run the application$app->get('/', function ($request, $response, $next) {
-$app->pipeRoutingMiddleware();
-$app->pipeDispatchMiddleware();
-$app->run();

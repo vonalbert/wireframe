@@ -10,10 +10,11 @@
     ],
     "require": {
         "php-di/php-di": "^5.2",
-        "zendframework/zend-expressive": "*",
-        "zendframework/zend-expressive-fastroute": "*",
+        "zendframework/zend-expressive": "^1.0",
+        "zendframework/zend-expressive-fastroute": "^1.1",
         "zendframework/zend-hydrator": "^2.1",
-        "doctrine/orm": "^2.5"
+        "doctrine/orm": "^2.5",
+        "filp/whoops": "^2.1"
     },
     "autoload": {
         "psr-4": { "Wireframe\\": "src/" }

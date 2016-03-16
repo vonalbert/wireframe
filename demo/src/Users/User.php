@@ -34,7 +34,7 @@ use Wireframe\Entity;
  * Description of User
  *
  * @author Alberto Avon <alberto.avon@gmail.com>
- * @Entity(repositoryClass="Wireframe\EntityRepository")
+ * @Entity
  * @Table(name="users")
  */
 class User extends Entity
