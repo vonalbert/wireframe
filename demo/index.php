@@ -25,13 +25,23 @@
  */
 require './vendor/autoload.php';
 
-$config = \Wireframe\Bootstrap::init(true);
-$config->entityManager(__DIR__ . '/src', [
+// Database Connection
+$conn = [
     'driver' => 'pdo_sqlite',
     'path' => __DIR__ . '/db.sqlite'
+];
+
+// Doctrine's EntityManager Configuration
+$config = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration([__DIR__], true);
+$em = Doctrine\ORM\EntityManager::create($conn, $config);
+
+// Start wireframe
+$app = new \Wireframe\Application($em, [
+    // A resource list
+    'users' => new Wireframe\Resource\EntityResource($em, \Wireframe\Test\Users\User::class),
 ]);
 
-$config->withSystemRoutes();
-$config->module(new Wireframe\Test\AppModule);
+var_dump($app);
 
-$config->createApplication()->run();
+// Run the application
+$app->run();
