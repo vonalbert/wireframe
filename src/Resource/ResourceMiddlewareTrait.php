@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2016 Alberto.
@@ -24,25 +24,22 @@
  * THE SOFTWARE.
  */
 
-// Delegate static file requests back to the PHP built-in webserver
-if (php_sapi_name() === 'cli-server'
-    && is_file(__DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))
-) {
-    return false;
+namespace Wireframe\Resource;
+
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
+/**
+ * Trait used by resources classes to implement the MiddlewareInterface
+ * @author Alberto Avon<alberto.avon@gmail.com>
+ */
+trait ResourceMiddlewareTrait
+{
+
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $out = null)
+    {
+        // Create a new request adding with a new `request` attribute
+        $out($request->withAttribute('resource', $this), $response);
+    }
+
 }
-
-// Bootstrap the system
-require __DIR__ . '/config/bootstrap.php';
-
-// Create an entity manager instance
-$em = require __DIR__ . '/config/entity-manager.php';
-
-// Start wireframe
-$app = new \Wireframe\Application($em);
-
-$app->addResource('users', new Wireframe\Resource\EntityResource($em, \Wireframe\Test\Users\User::class))->withAllEndpoints();
-
-// Run the application
-$app->pipeRoutingMiddleware();
-$app->pipeDispatchMiddleware();
-$app->run();

@@ -4,14 +4,14 @@ namespace Wireframe\Resource;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Wireframe\ResourceInterface;
+use Wireframe\Context\ContextInterface;
 use Zend\Hydrator\ClassMethods;
 use Zend\Hydrator\HydratorInterface;
 
 /**
  * @author Alberto
  */
-class EntityResource implements ResourceInterface
+class EntityResource extends AbstractResource
 {
     /**
      * @var EntityManager
@@ -74,17 +74,17 @@ class EntityResource implements ResourceInterface
     // =========================================================================
     // ResourceInterface
     // =========================================================================
-    public function findList()
+    public function findList(ContextInterface $context)
     {
         return $this->getEntityRepository()->findAll();
     }
 
-    public function find($id)
+    public function find(ContextInterface $context, $id)
     {
         return $this->getEntityRepository()->find($id);
     }
 
-    public function create(array $data)
+    public function create(ContextInterface $context, array $data)
     {
         $entity = $this->fillEntity(new $this->class, $data);
         $this->em->persist($entity);
@@ -92,16 +92,16 @@ class EntityResource implements ResourceInterface
         return $entity;
     }
 
-    public function update($id, array $data)
+    public function update(ContextInterface $context, $id, array $data)
     {
-        $entity = $this->fillEntity($this->find($id), $data);
+        $entity = $this->fillEntity($this->find($context, $id), $data);
         $this->em->persist($entity);
         
         return $entity;
     }
 
-    public function delete($id)
+    public function delete(ContextInterface $context, $id)
     {
-        $this->em->remove($this->find($id));
+        $this->em->remove($this->find($context, $id));
     }
 }

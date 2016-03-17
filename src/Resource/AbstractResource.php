@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2016 Alberto.
@@ -24,25 +24,13 @@
  * THE SOFTWARE.
  */
 
-// Delegate static file requests back to the PHP built-in webserver
-if (php_sapi_name() === 'cli-server'
-    && is_file(__DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))
-) {
-    return false;
+namespace Wireframe\Resource;
+
+/**
+ * Base abstract resource
+ * @author Alberto Avon<alberto.avon@gmail.com>
+ */
+abstract class AbstractResource implements ResourceInterface
+{
+    use ResourceMiddlewareTrait;
 }
-
-// Bootstrap the system
-require __DIR__ . '/config/bootstrap.php';
-
-// Create an entity manager instance
-$em = require __DIR__ . '/config/entity-manager.php';
-
-// Start wireframe
-$app = new \Wireframe\Application($em);
-
-$app->addResource('users', new Wireframe\Resource\EntityResource($em, \Wireframe\Test\Users\User::class))->withAllEndpoints();
-
-// Run the application
-$app->pipeRoutingMiddleware();
-$app->pipeDispatchMiddleware();
-$app->run();

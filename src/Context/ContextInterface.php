@@ -24,37 +24,56 @@
  * THE SOFTWARE.
  */
 
-namespace Wireframe\Core;
+namespace Wireframe\Context;
 
-use DI\ContainerBuilder as DiContainerBuilder;
-use Doctrine\ORM\EntityManager;
-use Interop\Container\ContainerInterface;
+use Countable;
+use IteratorAggregate;
 
 /**
- * Description of ContainerBuilder
- *
+ * A context is a bundle of data used throught the application to perform the
+ * required operations (e.g. resource retrieval etc)
+ * 
  * @author Alberto Avon<alberto.avon@gmail.com>
  */
-abstract class ContainerBuilder
+interface ContextInterface extends Countable, IteratorAggregate
 {
-    
+    /**
+     * Retrieve a value from the context
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
+    public function get($name, $default = null);
     
     /**
-     * Create a new container instance
-     * @param EntityManager $em
-     * @return ContainerInterface
+     * Set a value in the context
+     * @param string $name
+     * @param mixed $value
      */
-    public static function createContainer(EntityManager $em)
-    {
-        $cb = new DiContainerBuilder;
-        $cb->useAnnotations(true)->useAutowiring(true)
-                ->addDefinitions([
-                    EntityManager::class => $em,
-                    'em' => $em,
-                ]);
-        
-        return $cb->build();
-    }
-        
+    public function set($name, $value);
+    
+    /**
+     * Merge the array of data provided into the context
+     * @param array $data
+     */
+    public function merge(array $data);
+    
+    /**
+     * Removes an item from the context
+     * @param string $name
+     */
+    public function remove($name);
+    
+    /**
+     * Removes all items stored in the context
+     */
+    public function clear();
+    
+    /**
+     * Get the array representation of the context's data
+     * @return array
+     */
+    public function toArray();
+    
     
 }
