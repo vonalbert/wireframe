@@ -24,26 +24,12 @@
  * THE SOFTWARE.
  */
 
-// Delegate static file requests back to the PHP built-in webserver
-if (php_sapi_name() === 'cli-server'
-    && is_file(__DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))
-) {
-    return false;
-}
+// Enable php errors and error reporting
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
 
-// Bootstrap the system
-require __DIR__ . '/config/bootstrap.php';
+// Go up until we reach the project root
+chdir(dirname(dirname(__DIR__)));
 
-// Create an entity manager instance
-$em = require __DIR__ . '/config/entity-manager.php';
-
-// Start wireframe
-$app = new \Wireframe\Application($em, [
-    // A resource list
-    'users' => new Wireframe\Resource\EntityResource($em, \Wireframe\Test\Users\User::class),
-]);
-
-// Run the application$app->get('/', function ($request, $response, $next) {
-$app->pipeRoutingMiddleware();
-$app->pipeDispatchMiddleware();
-$app->run();
+// Require composer
+require 'vendor/autoload.php';

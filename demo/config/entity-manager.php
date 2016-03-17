@@ -1,6 +1,6 @@
 <?php
 
-/*
+/* 
  * The MIT License
  *
  * Copyright 2016 Alberto.
@@ -24,28 +24,17 @@
  * THE SOFTWARE.
  */
 
-namespace Wireframe\Test;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Setup;
 
-use DI\ContainerBuilder;
-use Wireframe\Application\Application;
-use Wireframe\Application\ModuleInterface;
-use Wireframe\Resource;
-use Wireframe\Test\Users\User;
+// Database Connection
+$conn = [
+    'driver' => 'pdo_sqlite',
+    'path' => dirname(__DIR__) . '/db.sqlite'
+];
 
-/**
- * @author Alberto Avon <alberto.avon@gmail.com>
- */
-class AppModule implements ModuleInterface
-{
+// Doctrine's EntityManager Configuration
+$config = Setup::createAnnotationMetadataConfiguration([dirname(__DIR__)], true);
 
-    public function registerRouting(Application $app)
-    {
-        Resource::create(User::class)->register($app, 'users');
-    }
-
-    public function registerServices(ContainerBuilder $builder)
-    {
-        
-    }
-
-}
+// Return the entity manager instance
+return EntityManager::create($conn, $config);

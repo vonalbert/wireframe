@@ -24,26 +24,24 @@
  * THE SOFTWARE.
  */
 
-// Delegate static file requests back to the PHP built-in webserver
-if (php_sapi_name() === 'cli-server'
-    && is_file(__DIR__ . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))
-) {
-    return false;
-}
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use Symfony\Component\Console\Helper\HelperSet;
 
 // Bootstrap the system
 require __DIR__ . '/config/bootstrap.php';
 
-// Create an entity manager instance
-$em = require __DIR__ . '/config/entity-manager.php';
+// Configurate command line
+$commands = array();
+$helperSet = ConsoleRunner::createHelperSet(require __DIR__ . '/config/entity-manager.php');
 
-// Start wireframe
-$app = new \Wireframe\Application($em, [
-    // A resource list
-    'users' => new Wireframe\Resource\EntityResource($em, \Wireframe\Test\Users\User::class),
-]);
+if ( ! ($helperSet instanceof HelperSet)) {
+    foreach ($GLOBALS as $helperSetCandidate) {
+        if ($helperSetCandidate instanceof HelperSet) {
+            $helperSet = $helperSetCandidate;
+            break;
+        }
+    }
+}
 
-// Run the application$app->get('/', function ($request, $response, $next) {
-$app->pipeRoutingMiddleware();
-$app->pipeDispatchMiddleware();
-$app->run();
+ConsoleRunner::run($helperSet, $commands);
+
