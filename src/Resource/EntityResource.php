@@ -4,7 +4,7 @@ namespace Wireframe\Resource;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Wireframe\Context\ContextInterface;
+use Wireframe\Api\ContextInterface;
 use Zend\Hydrator\ClassMethods;
 use Zend\Hydrator\HydratorInterface;
 

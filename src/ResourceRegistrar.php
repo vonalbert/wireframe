@@ -119,7 +119,8 @@ class ResourceRegistrar
      */
     public function listEndpoint()
     {
-        $this->app->get("/{$this->name}", $this->getMiddleware('handleList'), "{$this->name}.list");
+        $stack = $this->getMiddleware(Controller\ListActionController::class);
+        $this->app->get("/{$this->name}", $stack, "{$this->name}.list");
         return $this;
     }
 
@@ -129,7 +130,8 @@ class ResourceRegistrar
      */
     public function showEndpoint()
     {
-        $this->app->get("/{$this->name}/:id", $this->getMiddleware('handleShow'), "{$this->name}.show");
+        $stack = $this->getMiddleware(Controller\ShowActionController::class);
+        $this->app->get("/{$this->name}/:id", $stack, "{$this->name}.show");
         return $this;
     }
 
@@ -139,7 +141,8 @@ class ResourceRegistrar
      */
     public function createEndpoint()
     {
-        $this->app->post("/{$this->name}", $this->getMiddleware('handleCreate'), "{$this->name}.create");
+        $stack = $this->getMiddleware(Controller\CreateActionController::class);
+        $this->app->post("/{$this->name}", $stack, "{$this->name}.create");
         return $this;
     }
 
@@ -149,7 +152,8 @@ class ResourceRegistrar
      */
     public function updateEndpoint()
     {
-        $this->app->put("/{$this->name}/:id", $this->getMiddleware('handleEdit'), "{$this->name}.update");
+        $stack = $this->getMiddleware(Controller\UpdateActionController::class);
+        $this->app->put("/{$this->name}/:id", $stack, "{$this->name}.update");
         return $this;
     }
 
@@ -159,21 +163,19 @@ class ResourceRegistrar
      */
     public function deleteEndpoint()
     {
-        $this->app->delete("/{$this->name}/:id", $this->getMiddleware('handleDelete'), "{$this->name}.delete");
+        $stack = $this->getMiddleware(Controller\DeleteActionController::class);
+        $this->app->delete("/{$this->name}/:id", $stack, "{$this->name}.delete");
         return $this;
     }
 
     /**
-     * Create the controller string
-     * @param string|null $method
+     * Create the middleware stack for the route
+     * @param string $controller
      * @return array
      */
-    protected function getMiddleware($method = null)
+    protected function getMiddleware($controller)
     {
-        return [
-            $this->resource,
-            RestfulController::class . ($method ? '::' . $method : '')
-        ];
+        return [$this->resource, $controller];
     }
 
 }

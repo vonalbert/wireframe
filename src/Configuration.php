@@ -32,6 +32,11 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use Interop\Container\ContainerInterface;
 use OutOfBoundsException;
+use Wireframe\Api\ContextFactoryInterface;
+use Wireframe\Api\ContextInterface;
+use Wireframe\Context\DefaultContextFactory;
+use function DI\factory;
+use function DI\object;
 
 /**
  * Description of Configuration
@@ -137,11 +142,25 @@ class Configuration
     {
         $builder = new ContainerBuilder;
         $builder->useAnnotations(true)->useAutowiring(true);
-        $builder->addDefinitions([
-            EntityManager::class => $this->createEntityManager()
-        ]);
-
+        $builder->addDefinitions($this->getServicesDefinitions());
         return $builder->build();
+    }
+
+    /**
+     * Build and create a list of definitions for the container
+     * @return array
+     */
+    protected function getServicesDefinitions()
+    {
+        // EntityManager registration
+        $definitions[EntityManager::class] = $this->createEntityManager();
+        
+        // Context Interfaces implementation
+        $definitions[ContextFactoryInterface::class] = object(DefaultContextFactory::class);
+        $definitions[ContextInterface::class] = factory([ContextFactoryInterface::class, 'createContext']);
+        
+        // Return to parent
+        return $definitions;
     }
 
     /**

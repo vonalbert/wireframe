@@ -24,22 +24,23 @@
  * THE SOFTWARE.
  */
 
-namespace Wireframe\Resource;
+namespace Wireframe\Controller;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Response\JsonResponse;
 
 /**
- * Trait used by resources classes to implement the MiddlewareInterface
  * @author Alberto Avon<alberto.avon@gmail.com>
  */
-trait ResourceMiddlewareTrait
+class ShowActionController extends AbstractRestfulController
 {
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $out = null)
+    /**
+     * @inheritdoc
+     */
+    public function handle()
     {
-        // Create a new request adding with a new `resource` attribute
-        return $out($request->withAttribute('resource', $this), $response);
+        $output = $this->resource->find($this->context, $this->id);
+        return new JsonResponse($output);
     }
 
 }

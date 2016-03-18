@@ -67,5 +67,5 @@ class Application extends Expressive
     {
         return $this->getContainer()->get(EntityManager::class);
     }
-
+    
 }

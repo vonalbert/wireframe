@@ -24,22 +24,65 @@
  * THE SOFTWARE.
  */
 
-namespace Wireframe\Resource;
+namespace Wireframe\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Wireframe\Api\ContextInterface;
 
 /**
- * Trait used by resources classes to implement the MiddlewareInterface
  * @author Alberto Avon<alberto.avon@gmail.com>
  */
-trait ResourceMiddlewareTrait
+abstract class AbstractRestfulController
 {
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $out = null)
+    use RestfulControllerTrait;
+
+    /**
+     * @var ContextInterface
+     */
+    protected $context;
+
+    /**
+     * @var ServerRequestInterface
+     */
+    protected $request;
+
+    /**
+     * @var ResponseInterface
+     */
+    protected $response;
+
+    /**
+     * @param ContextInterface $context
+     */
+    public function __construct(ContextInterface $context)
     {
-        // Create a new request adding with a new `resource` attribute
-        return $out($request->withAttribute('resource', $this), $response);
+        $this->context = $context;
     }
 
+    /**
+     * Handle the request
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response)
+    {
+        // Store req and res in class' attributes
+        $this->request = $request;
+        $this->response = $response;
+
+        // Then process the request
+        $this->processRequest($request);
+        return $this->handle($request);
+    }
+
+    /**
+     * Abstract handler: the subclass MUST implement it in order to apply the
+     * real controller logic
+     * 
+     * @return ResponseInterface
+     */
+    abstract public function handle();
 }

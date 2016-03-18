@@ -24,22 +24,21 @@
  * THE SOFTWARE.
  */
 
-namespace Wireframe\Resource;
-
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+namespace Wireframe\Context;
 
 /**
- * Trait used by resources classes to implement the MiddlewareInterface
+ * Default implementation of the ContextFactoryInterface
  * @author Alberto Avon<alberto.avon@gmail.com>
  */
-trait ResourceMiddlewareTrait
+class DefaultContextFactory implements \Wireframe\Api\ContextFactoryInterface
 {
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $out = null)
+    /**
+     * @inheritdoc
+     */
+    public function createContext()
     {
-        // Create a new request adding with a new `resource` attribute
-        return $out($request->withAttribute('resource', $this), $response);
+        return new Context;
     }
 
 }
