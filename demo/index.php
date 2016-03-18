@@ -32,15 +32,12 @@ if (php_sapi_name() === 'cli-server'
 }
 
 // Bootstrap the system
-require __DIR__ . '/config/bootstrap.php';
-
-// Create an entity manager instance
-$em = require __DIR__ . '/config/entity-manager.php';
+$config = require __DIR__ . '/config/bootstrap.php';
 
 // Start wireframe
-$app = new \Wireframe\Application($em);
+$app = new \Wireframe\Application($config);
 
-$app->addResource('users', new Wireframe\Resource\EntityResource($em, \Wireframe\Test\Users\User::class))->withAllEndpoints();
+$app->addResource('users', new Wireframe\Resource\EntityResource($app->getEntityManager(), \Wireframe\Test\Users\User::class))->withAllEndpoints();
 
 // Run the application
 $app->run();

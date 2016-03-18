@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-namespace Wireframe\Core;
+namespace Wireframe\Errors;
 
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
@@ -35,7 +35,7 @@ use Zend\Expressive\WhoopsErrorHandler;
  *
  * @author Alberto Avon<alberto.avon@gmail.com>
  */
-class ExceptionHandler extends WhoopsErrorHandler
+class PrettyExceptionsHandler extends WhoopsErrorHandler
 {
     public function __construct()
     {

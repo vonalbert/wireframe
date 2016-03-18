@@ -6,8 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
-use Wireframe\Core\ContainerBuilder;
-use Wireframe\Core\ExceptionHandler;
+use Wireframe\Errors\PrettyExceptionsHandler;
 use Wireframe\Resource\ResourceInterface;
 use Zend\Expressive\Application as Expressive;
 use Zend\Expressive\Router\FastRouteRouter;
@@ -19,27 +18,16 @@ class Application extends Expressive
 {
 
     /**
-     * @var EntityManager
-     */
-    private $_em;
-
-    /**
      * @var ResourceInterface[]
      */
     private $_res = [];
-
+    
     /**
-     * @param EntityManager $em
+     * @param Configuration $config
      */
-    public function __construct(EntityManager $em)
+    public function __construct(Configuration $config)
     {
-        $this->_em = $em;
-
-        $router = new FastRouteRouter;
-        $container = ContainerBuilder::createContainer($em);
-        $exception = new ExceptionHandler;
-
-        parent::__construct($router, $container, $exception);
+        parent::__construct(new FastRouteRouter, $config->createContainer(), new PrettyExceptionsHandler);
     }
 
     /**
@@ -69,6 +57,15 @@ class Application extends Expressive
 
         $this->_res[$name] = $resource;
         return new ResourceRegistrar($this, $name, $resource);
+    }
+    
+    /**
+     * Get the entity manager registered in the container
+     * @return EntityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->getContainer()->get(EntityManager::class);
     }
 
 }

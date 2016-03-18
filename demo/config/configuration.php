@@ -24,24 +24,14 @@
  * THE SOFTWARE.
  */
 
-use Doctrine\ORM\Tools\Console\ConsoleRunner;
-use Symfony\Component\Console\Helper\HelperSet;
+// Create a new configuration object and return it to the caller
+$config = new Wireframe\Configuration;
+$config->debug();
+$config->database([
+    'driver' => 'pdo_sqlite',
+    'path' => dirname(__DIR__) . '/db.sqlite'
+]);
 
-// Bootstrap the system
-require __DIR__ . '/config/bootstrap.php';
+$config->ormMetadataMapping(dirname(__DIR__));
 
-// Configurate command line
-$commands = array();
-$helperSet = ConsoleRunner::createHelperSet(require __DIR__ . '/config/entity-manager.php');
-
-if ( ! ($helperSet instanceof HelperSet)) {
-    foreach ($GLOBALS as $helperSetCandidate) {
-        if ($helperSetCandidate instanceof HelperSet) {
-            $helperSet = $helperSetCandidate;
-            break;
-        }
-    }
-}
-
-ConsoleRunner::run($helperSet, $commands);
-
+return $config;

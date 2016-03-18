@@ -33,3 +33,6 @@ chdir(dirname(dirname(__DIR__)));
 
 // Require composer
 require 'vendor/autoload.php';
+
+// Launch configuration building script
+return require __DIR__ . '/configuration.php';

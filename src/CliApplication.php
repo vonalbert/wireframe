@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2016 Alberto.
@@ -24,17 +24,21 @@
  * THE SOFTWARE.
  */
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
+namespace Wireframe;
 
-// Database Connection
-$conn = [
-    'driver' => 'pdo_sqlite',
-    'path' => dirname(__DIR__) . '/db.sqlite'
-];
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
 
-// Doctrine's EntityManager Configuration
-$config = Setup::createAnnotationMetadataConfiguration([dirname(__DIR__)], true);
+/**
+ * Static Console application runner
+ * @author Alberto Avon<alberto.avon@gmail.com>
+ */
+abstract class CliApplication
+{
 
-// Return the entity manager instance
-return EntityManager::create($conn, $config);
+    public static function bootstrap(Configuration $config)
+    {
+        $helperSet = ConsoleRunner::createHelperSet($config->createEntityManager());
+        ConsoleRunner::run($helperSet, []);
+    }
+
+}

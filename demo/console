@@ -24,37 +24,6 @@
  * THE SOFTWARE.
  */
 
-namespace Wireframe\Core;
+use Wireframe\CliApplication;
 
-use DI\ContainerBuilder as DiContainerBuilder;
-use Doctrine\ORM\EntityManager;
-use Interop\Container\ContainerInterface;
-
-/**
- * Description of ContainerBuilder
- *
- * @author Alberto Avon<alberto.avon@gmail.com>
- */
-abstract class ContainerBuilder
-{
-    
-    
-    /**
-     * Create a new container instance
-     * @param EntityManager $em
-     * @return ContainerInterface
-     */
-    public static function createContainer(EntityManager $em)
-    {
-        $cb = new DiContainerBuilder;
-        $cb->useAnnotations(true)->useAutowiring(true)
-                ->addDefinitions([
-                    EntityManager::class => $em,
-                    'em' => $em,
-                ]);
-        
-        return $cb->build();
-    }
-        
-    
-}
+CliApplication::bootstrap(require __DIR__ . '/config/bootstrap.php');
