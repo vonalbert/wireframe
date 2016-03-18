@@ -88,6 +88,7 @@ class EntityResource extends AbstractResource
     {
         $entity = $this->fillEntity(new $this->class, $data);
         $this->em->persist($entity);
+        $this->em->flush();
         
         return $entity;
     }
@@ -96,6 +97,7 @@ class EntityResource extends AbstractResource
     {
         $entity = $this->fillEntity($this->find($context, $id), $data);
         $this->em->persist($entity);
+        $this->em->flush();
         
         return $entity;
     }
@@ -103,5 +105,6 @@ class EntityResource extends AbstractResource
     public function delete(ContextInterface $context, $id)
     {
         $this->em->remove($this->find($context, $id));
+        $this->em->flush();
     }
 }
