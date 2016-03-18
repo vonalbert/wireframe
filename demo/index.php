@@ -43,6 +43,4 @@ $app = new \Wireframe\Application($em);
 $app->addResource('users', new Wireframe\Resource\EntityResource($em, \Wireframe\Test\Users\User::class))->withAllEndpoints();
 
 // Run the application
-$app->pipeRoutingMiddleware();
-$app->pipeDispatchMiddleware();
 $app->run();
