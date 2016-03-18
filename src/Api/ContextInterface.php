@@ -37,6 +37,7 @@ use IteratorAggregate;
  */
 interface ContextInterface extends Countable, IteratorAggregate
 {
+
     /**
      * Retrieve a value from the context
      * @param string $name
@@ -44,36 +45,41 @@ interface ContextInterface extends Countable, IteratorAggregate
      * @return mixed
      */
     public function get($name, $default = null);
-    
+
     /**
      * Set a value in the context
      * @param string $name
      * @param mixed $value
      */
     public function set($name, $value);
-    
+
+    /**
+     * Return true if the value exists in the context
+     * @param string $name
+     * @return bool
+     */
+    public function has($name);
+
     /**
      * Merge the array of data provided into the context
      * @param array $data
      */
     public function merge(array $data);
-    
+
     /**
      * Removes an item from the context
      * @param string $name
      */
     public function remove($name);
-    
+
     /**
      * Removes all items stored in the context
      */
     public function clear();
-    
+
     /**
      * Get the array representation of the context's data
      * @return array
      */
     public function toArray();
-    
-    
 }
