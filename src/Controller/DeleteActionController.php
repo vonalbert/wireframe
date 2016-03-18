@@ -39,6 +39,7 @@ class DeleteActionController extends AbstractRestfulController
      */
     public function handle()
     {
+        $this->requireId();
         $this->resource->delete($this->context, $this->id);
         return new JsonResponse([]);
     }

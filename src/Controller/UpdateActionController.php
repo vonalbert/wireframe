@@ -39,6 +39,8 @@ class UpdateActionController extends AbstractRestfulController
      */
     public function handle()
     {
+        $this->requireId();
+        $this->requireInput();
         $output = $this->resource->update($this->context, $this->id, $this->input);
         return new JsonResponse($output);
     }

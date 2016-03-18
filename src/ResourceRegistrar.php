@@ -153,7 +153,7 @@ class ResourceRegistrar
     public function updateEndpoint()
     {
         $stack = $this->getMiddleware(Controller\UpdateActionController::class);
-        $this->app->put("/{$this->name}/{id}", $stack, "{$this->name}.update");
+        $this->app->route("/{$this->name}/{id}", $stack, ['PUT','POST'], "{$this->name}.update");
         return $this;
     }
 

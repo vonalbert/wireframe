@@ -39,6 +39,7 @@ class ShowActionController extends AbstractRestfulController
      */
     public function handle()
     {
+        $this->requireId();
         $output = $this->resource->find($this->context, $this->id);
         return new JsonResponse($output);
     }

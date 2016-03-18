@@ -39,6 +39,7 @@ class CreateActionController extends AbstractRestfulController
      */
     public function handle()
     {
+        $this->requireInput();
         $output = $this->resource->create($this->context, $this->input);
         return new JsonResponse($output);
     }
