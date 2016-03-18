@@ -131,7 +131,7 @@ class ResourceRegistrar
     public function showEndpoint()
     {
         $stack = $this->getMiddleware(Controller\ShowActionController::class);
-        $this->app->get("/{$this->name}/:id", $stack, "{$this->name}.show");
+        $this->app->get("/{$this->name}/{id}", $stack, "{$this->name}.show");
         return $this;
     }
 
@@ -153,7 +153,7 @@ class ResourceRegistrar
     public function updateEndpoint()
     {
         $stack = $this->getMiddleware(Controller\UpdateActionController::class);
-        $this->app->put("/{$this->name}/:id", $stack, "{$this->name}.update");
+        $this->app->put("/{$this->name}/{id}", $stack, "{$this->name}.update");
         return $this;
     }
 
@@ -164,7 +164,7 @@ class ResourceRegistrar
     public function deleteEndpoint()
     {
         $stack = $this->getMiddleware(Controller\DeleteActionController::class);
-        $this->app->delete("/{$this->name}/:id", $stack, "{$this->name}.delete");
+        $this->app->delete("/{$this->name}/{id}", $stack, "{$this->name}.delete");
         return $this;
     }
 
