@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use Wireframe\Errors\PrettyExceptionsHandler;
-use Wireframe\Resource\ResourceInterface;
+use Wireframe\Api\ResourceInterface;
 use Zend\Expressive\Application as Expressive;
 use Zend\Expressive\Router\FastRouteRouter;
 

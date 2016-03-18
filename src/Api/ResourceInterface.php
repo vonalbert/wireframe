@@ -1,6 +1,6 @@
 <?php
 
-namespace Wireframe\Resource;
+namespace Wireframe\Api;
 
 use Wireframe\Context\ContextInterface;
 use Zend\Stratigility\MiddlewareInterface;

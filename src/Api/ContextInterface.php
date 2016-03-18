@@ -24,18 +24,56 @@
  * THE SOFTWARE.
  */
 
-namespace Wireframe\Context;
+namespace Wireframe\Api;
+
+use Countable;
+use IteratorAggregate;
 
 /**
- * Interface that defines a context builder
+ * A context is a bundle of data used throught the application to perform the
+ * required operations (e.g. resource retrieval etc)
+ * 
  * @author Alberto Avon<alberto.avon@gmail.com>
  */
-interface ContextFactoryInterface
+interface ContextInterface extends Countable, IteratorAggregate
 {
-
     /**
-     * Creates a Context object
-     * @return ContextInterface
+     * Retrieve a value from the context
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
      */
-    public function createContext();
+    public function get($name, $default = null);
+    
+    /**
+     * Set a value in the context
+     * @param string $name
+     * @param mixed $value
+     */
+    public function set($name, $value);
+    
+    /**
+     * Merge the array of data provided into the context
+     * @param array $data
+     */
+    public function merge(array $data);
+    
+    /**
+     * Removes an item from the context
+     * @param string $name
+     */
+    public function remove($name);
+    
+    /**
+     * Removes all items stored in the context
+     */
+    public function clear();
+    
+    /**
+     * Get the array representation of the context's data
+     * @return array
+     */
+    public function toArray();
+    
+    
 }

@@ -29,9 +29,9 @@ namespace Wireframe;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use UnexpectedValueException;
-use Wireframe\Context\ContextFactoryInterface;
-use Wireframe\Context\ContextInterface;
-use Wireframe\Resource\ResourceInterface;
+use Wireframe\Api\ContextFactoryInterface;
+use Wireframe\Api\ContextInterface;
+use Wireframe\Api\ResourceInterface;
 use Zend\Diactoros\Response\JsonResponse;
 
 /**

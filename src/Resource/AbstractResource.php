@@ -30,7 +30,7 @@ namespace Wireframe\Resource;
  * Base abstract resource
  * @author Alberto Avon<alberto.avon@gmail.com>
  */
-abstract class AbstractResource implements ResourceInterface
+abstract class AbstractResource implements \Wireframe\Api\ResourceInterface
 {
     use ResourceMiddlewareTrait;
 }

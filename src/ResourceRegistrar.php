@@ -26,7 +26,7 @@
 
 namespace Wireframe;
 
-use Wireframe\Resource\ResourceInterface;
+use Wireframe\Api\ResourceInterface;
 
 /**
  * Register a specified route in the application instance
